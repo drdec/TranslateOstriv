@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/OstrivTranslate.Core/OstrivTranslate.Core.csproj" />
+    <Project Path="src/OstrivTranslate.App/OstrivTranslate.App.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/OstrivTranslate.Tests/OstrivTranslate.Tests.csproj" />
+  </Folder>
+</Solution>

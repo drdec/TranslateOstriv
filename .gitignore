@@ -1,0 +1,10 @@
+**/bin/
+**/obj/
+.vs/
+.dotnet/
+.nuget/
+artifacts/
+*.user
+*.ostriv.json
+*.ostriv.json.bak
+*.build.json

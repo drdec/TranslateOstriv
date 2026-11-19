@@ -1,0 +1,126 @@
+using System.Windows;
+
+namespace OstrivTranslate.App;
+
+public static class L
+{
+    private static readonly Dictionary<string, string[]> Text = new();
+    public static string Language { get; private set; } = "en";
+    public static string T(string key) => Text.TryGetValue(key, out var values) ? values[Language == "ru" ? 1 : Language == "be" ? 2 : 0] : key;
+    public static IEnumerable<string> Keys => Text.Keys;
+    public static void Set(string language)
+    {
+        Language = language is "ru" or "be" ? language : "en";
+        foreach (var key in Text.Keys) Application.Current.Resources[key] = T(key);
+    }
+    private static void A(string key, string en, string ru, string be) => Text.Add(key, [en, ru, be]);
+    static L()
+    {
+        A("Title", "Ostriv · Translation studio", "Ostriv · Редактор переводов", "Ostriv · Рэдактар перакладаў");
+        A("Subtitle", "Your words. The same world.", "Ваши слова. Знакомый мир.", "Вашы словы. Знаёмы свет.");
+        A("UiLanguage", "Interface", "Интерфейс", "Інтэрфейс");
+        A("OpenGame", "Extract from EXE", "Извлечь из EXE", "Выняць з EXE");
+        A("OpenProject", "Open project", "Открыть проект", "Адкрыць праект");
+        A("Save", "Save project", "Сохранить проект", "Захаваць праект");
+        A("SaveAs", "Save as…", "Сохранить как…", "Захаваць як…");
+        A("Rescan", "Rescan / migrate", "Пересканировать / перенести", "Сканаваць / перанесці");
+        A("ImportCsv", "Import CSV", "Импорт CSV", "Імпарт CSV");
+        A("ExportCsv", "Export CSV", "Экспорт CSV", "Экспарт CSV");
+        A("Build", "Build EXE…", "Собрать EXE…", "Сабраць EXE…");
+        A("Launch", "Launch build", "Запустить сборку", "Запусціць зборку");
+        A("TargetLanguage", "Translation language", "Язык перевода", "Мова перакладу");
+        A("AddLanguage", "+ Language", "+ Язык", "+ Мова");
+        A("LanguageCode", "Language code (e.g. be, ru, en, pl)", "Код языка (например, be, ru, en, pl)", "Код мовы (напрыклад, be, ru, en, pl)");
+        A("LanguageName", "Language name", "Название языка", "Назва мовы");
+        A("Search", "Search original, translation or context", "Поиск по оригиналу, переводу или контексту", "Пошук па арыгінале, перакладзе ці кантэксце");
+        A("All", "All entries", "Все записи", "Усе запісы");
+        A("Untranslated", "Untranslated", "Не переведено", "Не перакладзена");
+        A("Errors", "Errors", "Ошибки", "Памылкі");
+        A("Longer", "Longer than original", "Длиннее оригинала", "Даўжэй за арыгінал");
+        A("Candidates", "Unconfirmed candidates", "Неподтверждённые кандидаты", "Непацверджаныя кандыдаты");
+        A("ConfirmedOnly", "Confirmed entries", "Подтверждённые записи", "Пацверджаныя запісы");
+        A("Original", "Ukrainian original", "Украинский оригинал", "Украінскі арыгінал");
+        A("Translation", "Translation", "Перевод", "Пераклад");
+        A("Status", "Status", "Статус", "Статус");
+        A("Length", "UTF-16: translation / source", "UTF-16: перевод / оригинал", "UTF-16: пераклад / арыгінал");
+        A("Details", "ENTRY DETAILS", "СВЕДЕНИЯ О ЗАПИСИ", "ЗВЕСТКІ ПРА ЗАПІС");
+        A("Approve", "I confirm this candidate is text to translate", "Подтверждаю, что этот кандидат — текст для перевода", "Пацвярджаю, што гэты кандыдат — тэкст для перакладу");
+        A("ApproveSelected", "I confirm the selected candidates are text to translate", "Подтверждаю, что выбранные кандидаты — текст для перевода", "Пацвярджаю, што выбраныя кандыдаты — тэкст для перакладу");
+        A("SelectionHint", "Shift+click: select a range. Ctrl+click: add or remove a row. Ctrl+A: select all displayed rows.", "Shift + щелчок: выделить диапазон. Ctrl + щелчок: добавить или убрать строку. Ctrl+A: выделить все отображаемые строки.", "Shift + пстрычка: выбраць дыяпазон. Ctrl + пстрычка: дадаць або прыбраць радок. Ctrl+A: выбраць усе паказаныя радкі.");
+        A("EmptyHint", "Empty translation keeps the original. Edit the selected entry below.", "Пустой перевод сохраняет оригинал. Выбранную запись можно изменить ниже.", "Пусты пераклад захоўвае арыгінал. Выбраны запіс можна змяніць ніжэй.");
+        A("Extended", "Extended · longer text supported", "Расширенный · с удлинением строк", "Пашыраны · з падаўжэннем радкоў");
+        A("Strict", "Strict · original byte limit", "Строгий · исходный лимит байтов", "Строгі · зыходны ліміт байтаў");
+        A("Mode", "Build mode", "Режим сборки", "Рэжым зборкі");
+        A("Ready", "Ready", "Готово", "Гатова");
+        A("Busy", "Processing…", "Обработка…", "Апрацоўка…");
+        A("NoProject", "Open the original ostriv.exe to start, or load a translation project.", "Откройте оригинальный ostriv.exe или сохранённый проект перевода.", "Адкрыйце арыгінальны ostriv.exe ці захаваны праект перакладу.");
+        A("Summary", "{0} confirmed · {1} candidates · {2}/{3} translated · {4} errors · {5} shown", "{0} подтверждено · {1} кандидатов · переведено {2}/{3} · ошибок {4} · показано {5}", "{0} пацверджана · {1} кандыдатаў · перакладзена {2}/{3} · памылак {4} · паказана {5}");
+        A("SourceInfo", "Source: {0}\nSHA-256: {1}", "Исходник: {0}\nSHA-256: {1}", "Крыніца: {0}\nSHA-256: {1}");
+        A("EntryInfo", "{0} · file offset 0x{1:X8} · {2} references\n{3}", "{0} · смещение 0x{1:X8} · ссылок: {2}\n{3}", "{0} · зрух 0x{1:X8} · спасылак: {2}\n{3}");
+        A("ByteInfo", "Source: {0} UTF-16 / {1} bytes · Translation: {2} UTF-16 / {3} bytes", "Оригинал: {0} UTF-16 / {1} байт · Перевод: {2} UTF-16 / {3} байт", "Арыгінал: {0} UTF-16 / {1} байт · Пераклад: {2} UTF-16 / {3} байт");
+        A("Confirmed", "Confirmed", "Подтверждено", "Пацверджана");
+        A("Candidate", "Candidate", "Кандидат", "Кандыдат");
+        A("Approved", "Approved candidate", "Кандидат подтверждён вручную", "Кандыдат пацверджаны ўручную");
+        A("Translated", "Translated", "Переведено", "Перакладзена");
+        A("NeedsRelocation", "Needs relocation", "Требуется перенос строки", "Патрэбны перанос радка");
+        A("FontMissing", "Missing glyphs in game fonts", "В игровых шрифтах отсутствуют символы", "У гульнявых шрыфтах няма сімвалаў");
+        A("FontUnavailable", "Game fonts could not be checked", "Не удалось проверить игровые шрифты", "Не ўдалося праверыць гульнявыя шрыфты");
+        A("RenderingNotice", "Encoding does not guarantee rendering. Test text layout and script shaping in the game.", "Кодировка не гарантирует отображение. Проверьте размещение текста и особенности письма в игре.", "Кадыроўка не гарантуе адлюстраванне. Праверце размяшчэнне тэксту і асаблівасці пісьма ў гульні.");
+        A("Ok", "OK", "ОК", "ОК"); A("Cancel", "Cancel", "Отмена", "Скасаваць");
+        A("Apply", "Apply selected", "Применить выбранное", "Ужыць выбранае");
+        A("Yes", "Yes", "Да", "Так"); A("No", "No", "Нет", "Не");
+        A("Error", "Operation failed", "Операция не выполнена", "Аперацыя не выканана");
+        A("Unsaved", "Save changes before continuing?", "Сохранить изменения перед продолжением?", "Захаваць змены перад працягам?");
+        A("Saved", "Project saved", "Проект сохранён", "Праект захаваны");
+        A("Exported", "CSV exported", "CSV экспортирован", "CSV экспартаваны");
+        A("Review", "Review changes", "Проверка изменений", "Праверка зменаў");
+        A("ReviewHint", "Select changes to apply. Conflicts and ambiguous matches are unchecked. Choose the destination for ambiguous matches.", "Отметьте изменения для применения. Конфликты и неоднозначности не выбраны. Для неоднозначных совпадений укажите запись назначения.", "Адзначце змены для ўжывання. Канфлікты і неадназначнасці не выбраны. Для неадназначных супадзенняў выберыце мэтавы запіс.");
+        A("Incoming", "Incoming translation", "Входящий перевод", "Уваходны пераклад");
+        A("Existing", "Existing translation", "Текущий перевод", "Бягучы пераклад");
+        A("Destination", "Destination entry", "Запись назначения", "Мэтавы запіс");
+        A("ImportNew", "New translation", "Новый перевод", "Новы пераклад");
+        A("ImportConflict", "Conflicting translation", "Конфликт перевода", "Канфлікт перакладу");
+        A("Unmatched", "No matching source entry", "Нет соответствующей исходной записи", "Няма адпаведнага зыходнага запісу");
+        A("MigrationExact", "Exact text and context", "Совпали текст и контекст", "Супалі тэкст і кантэкст");
+        A("MigrationAmbiguous", "Choose / confirm destination", "Выберите / подтвердите назначение", "Выберыце / пацвердзіце прызначэнне");
+        A("NoImportChanges", "No changes to import", "Нет изменений для импорта", "Няма зменаў для імпарту");
+        A("SourceChangedPrompt", "The original executable is missing or has changed. Choose the current original EXE to rescan and review translation migration.", "Исходный EXE отсутствует или изменился. Выберите текущий оригинал для повторного извлечения и проверки переноса переводов.", "Зыходны EXE адсутнічае ці змяніўся. Выберыце бягучы арыгінал для паўторнага вымання і праверкі пераносу перакладаў.");
+        A("BuildSuccess", "Built {0} translations.\n{1}\n\nRuntime checks have not been performed. Launch this EXE and select the Ukrainian language slot.", "Собрано переводов: {0}.\n{1}\n\nПроверки в игре ещё не выполнены. Запустите этот EXE и выберите украинский языковой слот.", "Сабрана перакладаў: {0}.\n{1}\n\nПраверкі ў гульні яшчэ не выкананы. Запусціце гэты EXE і выберыце ўкраінскі моўны слот.");
+        A("ReportFailed", "EXE created, but the report could not be saved", "EXE создан, но отчёт не удалось сохранить", "EXE створаны, але справаздачу не ўдалося захаваць");
+        A("SaveExe", "Choose a name for the translated executable", "Задайте имя EXE с переводом", "Задайце імя EXE з перакладам");
+        A("ProjectFiles", "Translation projects", "Проекты перевода", "Праекты перакладу");
+        A("ExeFiles", "Windows executables", "Приложения Windows", "Праграмы Windows");
+        A("CsvFiles", "CSV files", "Файлы CSV", "Файлы CSV");
+        A("UnsupportedBuild", "This EXE version has no verified patch profile. Inspection and editing are available; building is blocked.", "Для этой версии EXE нет проверенного профиля. Просмотр и редактирование доступны; сборка заблокирована.", "Для гэтай версіі EXE няма праверанага профілю. Прагляд і рэдагаванне даступныя; зборка заблакавана.");
+        A("SourceChanged", "The original EXE changed. Rescan and migrate the project first.", "Исходный EXE изменился. Сначала пересканируйте и перенесите проект.", "Зыходны EXE змяніўся. Спачатку пераскануйце і перанясіце праект.");
+        A("InvalidPe", "Invalid or unsupported x64 PE executable", "Некорректный или неподдерживаемый x64 PE-файл", "Некарэктны ці непадтрыманы x64 PE-файл");
+        A("InvalidLanguage", "Use a unique language code (letters, digits, - or _) and a non-empty name.", "Укажите уникальный код языка (латиница, цифры, - или _) и название.", "Укажыце ўнікальны код мовы (лацінка, лічбы, - ці _) і назву.");
+        A("EmbeddedNull", "NUL characters are not allowed", "Символы NUL недопустимы", "Сімвалы NUL недапушчальныя");
+        A("InvalidUnicode", "Invalid UTF-16 sequence", "Некорректная последовательность UTF-16", "Некарэктная паслядоўнасць UTF-16");
+        A("TokensChanged", "Formatting parameters or tags differ from the source", "Параметры форматирования или теги отличаются от оригинала", "Параметры фарматавання ці тэгі адрозніваюцца ад арыгінала");
+        A("TooLong", "Translation exceeds the strict byte limit", "Перевод превышает строгий лимит байтов", "Пераклад перавышае строгі ліміт байтаў");
+        A("Unconfirmed", "Confirm this candidate before building", "Подтвердите кандидата перед сборкой", "Пацвердзіце кандыдата перад зборкай");
+        A("NoReferences", "No supported references found for relocation", "Не найдены поддерживаемые ссылки для переноса", "Не знойдзены падтрыманыя спасылкі для пераносу");
+        A("InteriorReference", "Code references the interior of this string; automatic patching is blocked", "Код ссылается внутрь строки; автоматическая замена заблокирована", "Код спасылаецца ўнутр радка; аўтаматычная замена заблакавана");
+        A("SharedStorage", "This string is a shared suffix of another referenced string; automatic patching is blocked", "Строка является общим окончанием другой используемой строки; автоматическая замена заблокирована", "Радок з'яўляецца агульным канчаткам іншага радка; аўтаматычная замена заблакавана");
+        A("EntryMismatch", "Project entry does not match the original EXE", "Запись проекта не соответствует исходному EXE", "Запіс праекта не адпавядае зыходнаму EXE");
+        A("NoTranslations", "No changed translations for the selected language", "Нет изменённых переводов для выбранного языка", "Няма змененых перакладаў для выбранай мовы");
+        A("OverlappingStrings", "Translated strings overlap in the executable", "Переводимые строки пересекаются в EXE", "Радкі перакладу перасякаюцца ў EXE");
+        A("NoSectionSpace", "Not enough header space for the translation section", "Недостаточно места в заголовке для секции перевода", "Недастаткова месца ў загалоўку для секцыі перакладу");
+        A("SignedExecutable", "Extending a signed executable is not supported", "Расширение подписанного EXE не поддерживается", "Пашырэнне падпісанага EXE не падтрымліваецца");
+        A("VerificationFailed", "Output verification failed; do not use this build", "Проверка результата не пройдена; не используйте эту сборку", "Праверка выніку не пройдзена; не выкарыстоўвайце гэтую зборку");
+        A("OriginalProtected", "The output must not replace the original, including via a hard link or symbolic link", "Нельзя заменять оригинал, в том числе через жёсткую или символическую ссылку", "Нельга замяняць арыгінал, у тым ліку праз жорсткую ці сімвалічную спасылку");
+        A("FileIdentityFailed", "Cannot verify that the destination is a different file", "Не удалось проверить, что назначение — другой файл", "Не ўдалося праверыць, што прызначэнне — іншы файл");
+        A("ExeRequired", "Choose an .exe output file", "Выберите выходной файл .exe", "Выберыце выходны файл .exe");
+        A("JsonRequired", "Choose a .json project file", "Выберите файл проекта .json", "Выберыце файл праекта .json");
+        A("InvalidProject", "Invalid translation project", "Некорректный проект перевода", "Некарэктны праект перакладу");
+        A("ProjectVersion", "Unsupported project format version", "Неподдерживаемая версия формата проекта", "Непадтрыманае выданне фармату праекта");
+        A("ImportSelection", "Choose a valid destination for every selected change", "Укажите корректное назначение для каждого выбранного изменения", "Укажыце карэктнае прызначэнне для кожнай выбранай змены");
+        A("DuplicateCsv", "Duplicate language/entry combination", "Повторяющаяся пара языка и записи", "Паўторная пара мовы і запісу");
+        A("CsvHeader", "Required CSV columns: id,language,original,translation", "Столбцы CSV: id,language,original,translation", "Слупкі CSV: id,language,original,translation");
+        A("InvalidCsv", "Malformed CSV", "Некорректный CSV", "Некарэктны CSV");
+        A("PreferencesFailed", "Could not save interface preferences", "Не удалось сохранить настройки интерфейса", "Не ўдалося захаваць налады інтэрфейсу");
+        A("LaunchChanged", "The last build changed on disk. Rebuild before launching.", "Последняя сборка изменилась на диске. Пересоберите перед запуском.", "Апошняя зборка змянілася на дыску. Перазбярыце перад запускам.");
+        A("FontWarningConfirm", "Some translated glyphs are missing from game fonts, or fonts could not be checked. Continue building?", "Некоторых символов нет в игровых шрифтах либо шрифты не удалось проверить. Продолжить сборку?", "Некаторых сімвалаў няма ў гульнявых шрыфтах або шрыфты не ўдалося праверыць. Працягнуць зборку?");
+    }
+}
